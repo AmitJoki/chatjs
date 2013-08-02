@@ -1,16 +1,18 @@
-﻿namespace ChatJs.Net
+﻿using System;
+
+namespace ChatJs.Net
 {
     public class ChatMessage
     {
         /// <summary>
         /// The user that sent the message
         /// </summary>
-        public ChatUser UserFrom { get; set; }
+        public int UserFromId { get; set; }
 
         /// <summary>
         /// The user to whom the message is to
         /// </summary>
-        public ChatUser UserTo { get; set; }
+        public int UserToId { get; set; }
 
         /// <summary>
         /// Message timestamp
@@ -32,5 +34,10 @@
         /// 2) It allows for different browser windows to be synchronized
         /// </remarks>
         public string ClientGuid { get; set; }
+
+        /// <summary>
+        /// Still verifying whether this is necessary
+        /// </summary>
+        public DateTime DateTime { get; set; }
     }
 }

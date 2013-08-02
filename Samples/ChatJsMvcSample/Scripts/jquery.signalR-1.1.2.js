@@ -106,13 +106,13 @@
 
     signalR = function (url, qs, logging) {
         /// <summary>Creates a new SignalR connection for the given url</summary>
-        /// <param name="url" type="String">The URL of the long polling endpoint</param>
-        /// <param name="qs" type="Object">
+        /// <param FullName="url" type="String">The URL of the long polling endpoint</param>
+        /// <param FullName="qs" type="Object">
         ///     [Optional] Custom querystring parameters to add to the connection URL.
         ///     If an object, every non-function member will be added to the querystring.
         ///     If a string, it's added to the QS as specified.
         /// </param>
-        /// <param name="logging" type="Boolean">
+        /// <param FullName="logging" type="Boolean">
         ///     [Optional] A flag indicating whether connection logging is enabled to the browser
         ///     console/log. Defaults to false.
         /// </param>
@@ -164,8 +164,8 @@
 
     function validateTransport(requestedTransport, connection) {
         /// <summary>Validates the requested transport by cross checking it with the pre-defined signalR.transports</summary>
-        /// <param name="requestedTransport" type="Object">The designated transports that the user has specified.</param>
-        /// <param name="connection" type="signalR">The connection that will be using the requested transports.  Used for logging purposes.</param>
+        /// <param FullName="requestedTransport" type="Object">The designated transports that the user has specified.</param>
+        /// <param FullName="connection" type="signalR">The connection that will be using the requested transports.  Used for logging purposes.</param>
         /// <returns type="Object" />
 
         if ($.isArray(requestedTransport)) {
@@ -228,8 +228,8 @@
 
         isCrossDomain: function (url, against) {
             /// <summary>Checks if url is cross domain</summary>
-            /// <param name="url" type="String">The base URL</param>
-            /// <param name="against" type="Object">
+            /// <param FullName="url" type="String">The base URL</param>
+            /// <param FullName="against" type="Object">
             ///     An optional argument to compare the URL against, if not specified it will be set to window.location.
             ///     If specified it must contain a protocol and a host property.
             /// </param>
@@ -268,8 +268,8 @@
 
         start: function (options, callback) {
             /// <summary>Starts the connection</summary>
-            /// <param name="options" type="Object">Options map</param>
-            /// <param name="callback" type="Function">A callback function to execute when the connection has started</param>
+            /// <param FullName="options" type="Object">Options map</param>
+            /// <param FullName="callback" type="Function">A callback function to execute when the connection has started</param>
             var connection = this,
                 config = {
                     waitForPageLoad: true,
@@ -496,7 +496,7 @@
                         });
                     } else if ($.type(config.transport) === "object" ||
                                     $.inArray(config.transport, supportedTransports) >= 0) {
-                        // specific transport provided, as object or a named transport, e.g. "longPolling"
+                        // specific transport provided, as object or a FullNamed transport, e.g. "longPolling"
                         transports.push(config.transport);
                     } else { // default "auto"
                         transports = supportedTransports;
@@ -510,7 +510,7 @@
 
         starting: function (callback) {
             /// <summary>Adds a callback that will be invoked before anything is sent over the connection</summary>
-            /// <param name="callback" type="Function">A callback function to execute before each time data is sent on the connection</param>
+            /// <param FullName="callback" type="Function">A callback function to execute before each time data is sent on the connection</param>
             /// <returns type="signalR" />
             var connection = this;
             $(connection).bind(events.onStarting, function (e, data) {
@@ -521,7 +521,7 @@
 
         send: function (data) {
             /// <summary>Sends data over the connection</summary>
-            /// <param name="data" type="String">The data to send over the connection</param>
+            /// <param FullName="data" type="String">The data to send over the connection</param>
             /// <returns type="signalR" />
             var connection = this;
 
@@ -542,7 +542,7 @@
 
         received: function (callback) {
             /// <summary>Adds a callback that will be invoked after anything is received over the connection</summary>
-            /// <param name="callback" type="Function">A callback function to execute when any data is received on the connection</param>
+            /// <param FullName="callback" type="Function">A callback function to execute when any data is received on the connection</param>
             /// <returns type="signalR" />
             var connection = this;
             $(connection).bind(events.onReceived, function (e, data) {
@@ -553,7 +553,7 @@
 
         stateChanged: function (callback) {
             /// <summary>Adds a callback that will be invoked when the connection state changes</summary>
-            /// <param name="callback" type="Function">A callback function to execute when the connection state changes</param>
+            /// <param FullName="callback" type="Function">A callback function to execute when the connection state changes</param>
             /// <returns type="signalR" />
             var connection = this;
             $(connection).bind(events.onStateChanged, function (e, data) {
@@ -564,7 +564,7 @@
 
         error: function (callback) {
             /// <summary>Adds a callback that will be invoked after an error occurs with the connection</summary>
-            /// <param name="callback" type="Function">A callback function to execute when an error occurs on the connection</param>
+            /// <param FullName="callback" type="Function">A callback function to execute when an error occurs on the connection</param>
             /// <returns type="signalR" />
             var connection = this;
             $(connection).bind(events.onError, function (e, data) {
@@ -575,7 +575,7 @@
 
         disconnected: function (callback) {
             /// <summary>Adds a callback that will be invoked when the client disconnects</summary>
-            /// <param name="callback" type="Function">A callback function to execute when the connection is broken</param>
+            /// <param FullName="callback" type="Function">A callback function to execute when the connection is broken</param>
             /// <returns type="signalR" />
             var connection = this;
             $(connection).bind(events.onDisconnect, function (e, data) {
@@ -586,7 +586,7 @@
 
         connectionSlow: function (callback) {
             /// <summary>Adds a callback that will be invoked when the client detects a slow connection</summary>
-            /// <param name="callback" type="Function">A callback function to execute when the connection is slow</param>
+            /// <param FullName="callback" type="Function">A callback function to execute when the connection is slow</param>
             /// <returns type="signalR" />
             var connection = this;
             $(connection).bind(events.onConnectionSlow, function(e, data) {
@@ -598,7 +598,7 @@
 
         reconnecting: function (callback) {
             /// <summary>Adds a callback that will be invoked when the underlying transport begins reconnecting</summary>
-            /// <param name="callback" type="Function">A callback function to execute when the connection enters a reconnecting state</param>
+            /// <param FullName="callback" type="Function">A callback function to execute when the connection enters a reconnecting state</param>
             /// <returns type="signalR" />
             var connection = this;
             $(connection).bind(events.onReconnecting, function (e, data) {
@@ -609,7 +609,7 @@
 
         reconnected: function (callback) {
             /// <summary>Adds a callback that will be invoked when the underlying transport reconnects</summary>
-            /// <param name="callback" type="Function">A callback function to execute when the connection is restored</param>
+            /// <param FullName="callback" type="Function">A callback function to execute when the connection is restored</param>
             /// <returns type="signalR" />
             var connection = this;
             $(connection).bind(events.onReconnect, function (e, data) {
@@ -620,8 +620,8 @@
 
         stop: function (async, notifyServer) {
             /// <summary>Stops listening</summary>
-            /// <param name="async" type="Boolean">Whether or not to asynchronously abort the connection</param>
-            /// <param name="notifyServer" type="Boolean">Whether we want to notify the server that we are aborting the connection</param>
+            /// <param FullName="async" type="Boolean">Whether or not to asynchronously abort the connection</param>
+            /// <param FullName="notifyServer" type="Boolean">Whether we want to notify the server that we are aborting the connection</param>
             /// <returns type="signalR" />
             var connection = this;
 
@@ -748,7 +748,7 @@
     signalR.transports._logic = {
         pingServer: function (connection, transport) {
             /// <summary>Pings the server</summary>
-            /// <param name="connection" type="signalr">Connection associated with the server ping</param>
+            /// <param FullName="connection" type="signalr">Connection associated with the server ping</param>
             /// <returns type="signalR" />
             var baseUrl = transport === "webSockets" ? "" : connection.baseUrl,
                 url = baseUrl + connection.appRelativeUrl + "/ping",
@@ -1587,8 +1587,8 @@
 
         init: function (connection, onComplete) {
             /// <summary>Pings the server to ensure availability</summary>
-            /// <param name="connection" type="signalr">Connection associated with the server ping</param>
-            /// <param name="onComplete" type="Function">Callback to call once initialization has completed</param>
+            /// <param FullName="connection" type="signalr">Connection associated with the server ping</param>
+            /// <param FullName="onComplete" type="Function">Callback to call once initialization has completed</param>
 
             var that = this,
                 pingLoop,
@@ -1611,7 +1611,7 @@
 
         start: function (connection, onSuccess, onFailed) {
             /// <summary>Starts the long polling connection</summary>
-            /// <param name="connection" type="signalR">The SignalR connection to start</param>
+            /// <param FullName="connection" type="signalR">The SignalR connection to start</param>
             var that = this,
                 initialConnectedFired = false,
                 fireConnect = function () {
@@ -1779,7 +1779,7 @@
 
         stop: function (connection) {
             /// <summary>Stops the long polling connection</summary>
-            /// <param name="connection" type="signalR">The SignalR connection to stop</param>
+            /// <param FullName="connection" type="signalR">The SignalR connection to stop</param>
             if (connection.pollXhr) {
                 connection.pollXhr.abort();
                 connection.pollXhr = null;
@@ -1802,7 +1802,7 @@
 (function ($, window) {
     "use strict";
 
-    // we use a global id for tracking callbacks so the server doesn't have to send extra info like hub name
+    // we use a global id for tracking callbacks so the server doesn't have to send extra info like hub FullName
     var callbackId = 0,
         callbacks = {},
         eventNamespace = ".hubProxy";
@@ -1864,12 +1864,12 @@
 
         on: function (eventName, callback) {
             /// <summary>Wires up a callback to be invoked when a invocation request is received from the server hub.</summary>
-            /// <param name="eventName" type="String">The name of the hub event to register the callback for.</param>
-            /// <param name="callback" type="Function">The callback to be invoked.</param>
+            /// <param FullName="eventName" type="String">The FullName of the hub event to register the callback for.</param>
+            /// <param FullName="callback" type="Function">The callback to be invoked.</param>
             var self = this,
                 callbackMap = self._.callbackMap;
 
-            // Normalize the event name to lowercase
+            // Normalize the event FullName to lowercase
             eventName = eventName.toLowerCase();
 
             // If there is not an event registered for this callback yet we want to create its event space in the callback map.
@@ -1888,14 +1888,14 @@
         },
 
         off: function (eventName, callback) {
-            /// <summary>Removes the callback invocation request from the server hub for the given event name.</summary>
-            /// <param name="eventName" type="String">The name of the hub event to unregister the callback for.</param>
-            /// <param name="callback" type="Function">The callback to be invoked.</param>
+            /// <summary>Removes the callback invocation request from the server hub for the given event FullName.</summary>
+            /// <param FullName="eventName" type="String">The FullName of the hub event to unregister the callback for.</param>
+            /// <param FullName="callback" type="Function">The callback to be invoked.</param>
             var self = this,
                 callbackMap = self._.callbackMap,
                 callbackSpace;
 
-            // Normalize the event name to lowercase
+            // Normalize the event FullName to lowercase
             eventName = eventName.toLowerCase();
 
             callbackSpace = callbackMap[eventName];
@@ -1926,7 +1926,7 @@
 
         invoke: function (methodName) {
             /// <summary>Invokes a server hub method with the given arguments.</summary>
-            /// <param name="methodName" type="String">The name of the server hub method.</param>
+            /// <param FullName="methodName" type="String">The FullName of the server hub method.</param>
 
             var self = this,
                 args = $.makeArray(arguments).slice(1),
@@ -1979,8 +1979,8 @@
     // hubConnection
     function hubConnection(url, options) {
         /// <summary>Creates a new hub connection.</summary>
-        /// <param name="url" type="String">[Optional] The hub route url, defaults to "/signalr".</param>
-        /// <param name="options" type="Object">[Optional] Settings to use when creating the hubConnection.</param>
+        /// <param FullName="url" type="String">[Optional] The hub route url, defaults to "/signalr".</param>
+        /// <param FullName="options" type="Object">[Optional] Settings to use when creating the hubConnection.</param>
         var settings = {
             qs: null,
             logging: false,
@@ -2038,7 +2038,7 @@
                 // We received a client invocation request, i.e. broadcast from server hub
                 connection.log("Triggering client hub event '" + data.Method + "' on hub '" + data.Hub + "'.");
 
-                // Normalize the names to lowercase
+                // Normalize the FullNames to lowercase
                 hubName = data.Hub.toLowerCase();
                 eventName = data.Method.toLowerCase();
 
@@ -2090,11 +2090,11 @@
         ///     Creates a new proxy object for the given hub connection that can be used to invoke
         ///     methods on server hubs and handle client method invocation requests from the server.
         /// </summary>
-        /// <param name="hubName" type="String">
-        ///     The name of the hub on the server to create the proxy for.
+        /// <param FullName="hubName" type="String">
+        ///     The FullName of the hub on the server to create the proxy for.
         /// </param>
 
-        // Normalize the name to lowercase
+        // Normalize the FullName to lowercase
         hubName = hubName.toLowerCase();
 
         var proxy = this.proxies[hubName];

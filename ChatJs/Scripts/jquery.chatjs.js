@@ -1,7 +1,7 @@
-﻿/**
+/**
  * ChatJS 1.0 - MIT License
  * www.chatjs.net
- * 
+ *
  * Copyright (c) 2013, André Pena
  * All rights reserved.
  *
@@ -11,7 +11,7 @@
 (function ($) {
     function ChatContainer(options) {
         /// <summary>This is a window container, responsible for hosting both the users list and the chat window </summary>
-        /// <param name="options" type=""></param>
+        /// <param FullName="options" type=""></param>
 
         this.defaults = {
             objectType: null,
@@ -83,7 +83,8 @@
             // text-box-wrapper
             if (_this.opts.showTextBox) {
                 var $windowTextBoxWrapper = $("<div/>").addClass("chat-window-text-box-wrapper").appendTo(_this.$windowContent);
-                _this.$textBox = $("<input/>").attr("type", "text").addClass("chat-window-text-box").appendTo($windowTextBoxWrapper);
+                _this.$textBox = $("<textarea />").attr("rows", "1").addClass("chat-window-text-box").appendTo($windowTextBoxWrapper);
+                _this.$textBox.autosize();
             }
 
             // wire everything up
@@ -118,7 +119,7 @@
 
         setVisible: function (visible) {
             /// <summary>Sets the window visible or not</summary>
-            /// <param name="visible" type="Boolean">Whether it's visible</param>
+            /// <param FullName="visible" type="Boolean">Whether it's visible</param>
             var _this = this;
             if (visible)
                 _this.$window.show();
@@ -166,9 +167,10 @@
 
     function ChatWindow(options) {
         /// <summary>This is the chat window for a user.. contains the chat messages</summary>
-        /// <param name="options" type="Object"></param>
+        /// <param FullName="options" type="Object"></param>
         // Defaults:
         this.defaults = {
+            chat: null,
             myUser: null,
             otherUser: null,
             typingText: null,
@@ -193,7 +195,7 @@
             var _this = this;
             _this.chatContainer.setToggleState("maximized");
 
-            if (message.UserFrom.Id != this.opts.myUser.Id) {
+            if (message.UserFromId != this.opts.myUser.Id) {
                 // the message did not came from myself. Better erase the typing signal
                 _this.removeTypingSignal();
             }
@@ -265,13 +267,13 @@
 
                 // gets the last message to see if it's possible to just append the text
                 var $lastMessage = $("div.chat-message:last", _this.chatContainer.$windowInnerContent);
-                if ($lastMessage.length && $lastMessage.attr("data-val-user-from") == message.UserFrom.Id) {
+                if ($lastMessage.length && $lastMessage.attr("data-val-user-from") == message.UserFromId) {
                     // we can just append text then
                     $messageP.appendTo($(".chat-text-wrapper", $lastMessage));
                 }
                 else {
                     // in this case we need to create a whole new message
-                    var $chatMessage = $("<div/>").addClass("chat-message").attr("data-val-user-from", message.UserFrom.Id);
+                    var $chatMessage = $("<div/>").addClass("chat-message").attr("data-val-user-from", message.UserFromId);
                     $chatMessage.appendTo(_this.chatContainer.$windowInnerContent);
 
                     var $gravatarWrapper = $("<div/>").addClass("chat-gravatar-wrapper").appendTo($chatMessage);
@@ -281,7 +283,8 @@
                     $messageP.appendTo($textWrapper);
 
                     // add image
-                    $("<img/>").attr("src", decodeURI(message.UserFrom.ProfilePictureUrl)).appendTo($gravatarWrapper);
+                    var messageUserFrom = _this.opts.chat.usersById[message.UserFromId];
+                    $("<img/>").attr("src", decodeURI(messageUserFrom.ProfilePictureUrl)).appendTo($gravatarWrapper);
                 }
 
                 // scroll to the bottom
@@ -291,7 +294,7 @@
 
         this.sendMessage = function (messageText) {
             /// <summary>Sends a message to the other user</summary>
-            /// <param name="messageText" type="String">Message being sent</param>
+            /// <param FullName="messageText" type="String">Message being sent</param>
             var _this = this;
 
             var generateGuidPart = function () {
@@ -300,7 +303,7 @@
 
             var clientGuid = (generateGuidPart() + generateGuidPart() + '-' + generateGuidPart() + '-' + generateGuidPart() + '-' + generateGuidPart() + '-' + generateGuidPart() + generateGuidPart() + generateGuidPart());
             _this.addMessage({
-                UserFrom: _this.opts.myUser,
+                UserFromId: _this.opts.myUser.Id,
                 Message: messageText
             }, clientGuid);
 
@@ -355,7 +358,7 @@
                     e.preventDefault();
                     if ($(this).val()) {
                         _this.sendMessage($(this).val());
-                        $(this).val('');
+                        $(this).val('').trigger("autosize.resize");
                     }
                 }
             });
@@ -388,7 +391,7 @@
 
         showTypingSignal: function (user) {
             /// <summary>Adds a typing signal to this window. It means the other user is typing</summary>
-            /// <param name="user" type="Object">the other user info</param>
+            /// <param FullName="user" type="Object">the other user info</param>
             var _this = this;
             if (_this.$typingSignal)
                 _this.$typingSignal.remove();
@@ -444,7 +447,9 @@
             adapter: null,
             titleText: 'Chat',
             emptyRoomText: "There's no other users",
-            typingText: " is typing..."
+            typingText: " is typing...",
+            useActivityIndicatorPlugin: true,
+            playSound: true
         };
 
         //Extending options:
@@ -454,39 +459,196 @@
         _this.$el = null;
 
         // there will be one property on this object for each user in the chat
-        // the property name is the other user id (toStringed)
+        // the property FullName is the other user id (toStringed)
         _this.chatWindows = new Object();
         _this.lastMessageCheckTimeStamp = null;
         _this.chatContainer = null;
+        _this.usersById = {};
+    }
 
-        _this.createCookie = function (name, value, days) {
-            var expires;
-            if (days) {
-                var date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toGMTString();
-            } else {
-                expires = "";
+    // Separate functionality from object creation
+    Chat.prototype = {
+
+        init: function () {
+            var _this = this;
+
+            var mainChatWindowChatState = _this.readCookie("main_window_chat_state");
+            if (!mainChatWindowChatState)
+                mainChatWindowChatState = "maximized";
+
+            // will create user list chat container
+            _this.chatContainer = $.chatContainer({
+                title: _this.opts.titleText,
+                showTextBox: false,
+                canClose: false,
+                initialToggleState: mainChatWindowChatState,
+                onCreated: function (container) {
+                    if (!container.$windowInnerContent.html()) {
+                        var $loadingBox = $("<div/>").addClass("loading-box").appendTo(container.$windowInnerContent);
+                        if (_this.opts.useActivityIndicatorPlugin)
+                            $loadingBox.activity({ segments: 8, width: 3, space: 0, length: 3, color: '#666666', speed: 1.5 });
+                    }
+                },
+                onToggleStateChanged: function (toggleState) {
+                    _this.createCookie("main_window_chat_state", toggleState);
+                }
+            });
+
+            // the client functions are functions that must be called by the chat-adapter to interact
+            // with the chat
+            _this.client = {
+                sendMessage: function (message) {
+                    /// <summary>Called by the adapter when the OTHER user sends a message to the current user</summary>
+                    /// <param FullName="message" type="Object">Message object</param>
+                    if (message.UserFromId != _this.opts.user.Id) {
+                        // in this case this message did not came from myself
+                        if (!_this.chatWindows[message.UserFromId])
+                            _this.createNewChatWindow(message.UserFromId);
+                        else
+                            _this.chatWindows[message.UserFromId].addMessage(message);
+                        if (_this.opts.playSound)
+                            _this.playSound("/chatjs/sounds/chat");
+
+                        // play sound here
+                    } else {
+                        if (_this.chatWindows[message.UserToId]) {
+                            _this.chatWindows[message.UserToId].addMessage(message);
+                        }
+                    }
+                },
+
+                sendTypingSignal: function (otherUserId) {
+                    /// <summary>Called by the adapter when the OTHER user is sending a typing signal to the current user</summary>
+                    /// <param FullName="otherUser" type="Object">User object (the other sending the typing signal)</param>
+                    if (_this.chatWindows[otherUserId]) {
+                        var otherUser = _this.usersById[otherUserId];
+                        _this.chatWindows[otherUserId].showTypingSignal(otherUser);
+                    }
+                },
+
+                usersListChanged: function (usersList) {
+                    /// <summary>Called by the adapter when the users list changes</summary>
+                    /// <param FullName="usersList" type="Object">The new user list</param>
+
+                    // initializes the user list with the current user, because he/she will not be retrieved
+                    _this.usersById = {};
+                    _this.usersById[_this.opts.user.Id] = _this.opts.user;
+
+                    _this.chatContainer.getContent().html('');
+                    if (usersList.length == 0) {
+                        $("<div/>").addClass("user-list-empty").text(_this.opts.emptyRoomText).appendTo(_this.chatContainer.getContent());
+                    }
+                    else {
+                        for (var i = 0; i < usersList.length; i++) {
+                            if (usersList[i].Id != _this.opts.user.Id) {
+                                _this.usersById[usersList[i].Id] = usersList[i];
+                                var $userListItem = $("<div/>")
+                                    .addClass("user-list-item")
+                                    .attr("data-val-id", usersList[i].Id)
+                                    .appendTo(_this.chatContainer.getContent());
+
+                                $("<img/>")
+                                    .addClass("profile-picture")
+                                    .attr("src", usersList[i].ProfilePictureUrl)
+                                    .appendTo($userListItem);
+
+                                $("<div/>")
+                                    .addClass("profile-status")
+                                    .addClass(usersList[i].Status == 0 ? "offline" : "online")
+                                    .appendTo($userListItem);
+
+                                $("<div/>")
+                                    .addClass("content")
+                                    .text(usersList[i].Name)
+                                    .appendTo($userListItem);
+
+                                // makes a click in the user to either create a new chat window or open an existing
+                                // I must clusure the 'i'
+                                (function (otherUserId) {
+                                    // handles clicking in a user. Starts up a new chat session
+                                    $userListItem.click(function () {
+                                        if (_this.chatWindows[otherUserId]) {
+                                            _this.chatWindows[otherUserId].focus();
+                                        } else
+                                            _this.createNewChatWindow(otherUserId);
+                                    });
+                                })(usersList[i].Id);
+                            }
+                        }
+                    }
+
+                    // update the online status of the remaining windows
+                    for (var i in _this.chatWindows) {
+                        if (_this.usersById && _this.usersById[i])
+                            _this.chatWindows[i].setOnlineStatus(_this.usersById[i].Status == 1);
+                        else
+                            _this.chatWindows[i].setOnlineStatus(false);
+                    }
+
+                    _this.chatContainer.setVisible(true);
+                },
+
+                showError: function (errorMessage) {
+                    // todo
+                }
+            };
+
+            _this.opts.adapter.init(_this, function () {
+                /// <summary>Called by the adapter when all the adapter initialization is done already</summary>
+                /// <param FullName="usersList" type=""></param>
+
+                // gets the user list
+                _this.opts.adapter.server.getUsersList(function (usersList) {
+                    _this.client.usersListChanged(usersList);
+                    _this.loadWindows();
+                    _this.opts.adapter.startLongPolling();
+                });
+            });
+        },
+
+        playSound: function (filename) {
+            /// <summary>Plays a notification sound</summary>
+            /// <param FullName="fileFullName" type="String">The file path without extension</param>
+            var $soundContainer = $("#soundContainer");
+            if (!$soundContainer.length)
+                $soundContainer = $("<div>").attr("id", "soundContainer").appendTo($("body"));
+            $soundContainer.html('<audio autoplay="autoplay"><source src="' + filename + '.mp3" type="audio/mpeg" /><source src="' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="' + filename + '.mp3" /></audio>');
+        },
+
+        loadWindows: function () {
+            var _this = this;
+            var cookie = _this.readCookie("chat_state");
+            if (cookie) {
+                var openedChatWindows = JSON.parse(cookie);
+                for (var i = 0; i < openedChatWindows.length; i++) {
+                    var otherUserId = openedChatWindows[i].userId;
+                    _this.opts.adapter.server.getUserInfo(otherUserId, function (user) {
+                        if (user) {
+                            if (!_this.chatWindows[otherUserId])
+                                _this.createNewChatWindow(otherUserId, null, "blured");
+                        } else {
+                            // when an error occur, the state of this cookie invalid
+                            // it must be destroyed
+                            _this.eraseCookie("chat_state");
+                        }
+                    });
+                }
             }
-            document.cookie = name + "=" + value + expires + "; path=/";
-        };
+        },
 
-        _this.readCookie = function (name) {
-            var nameEq = name + "=";
-            var ca = document.cookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEq) == 0) return c.substring(nameEq.length, c.length);
+        saveWindows: function () {
+            var _this = this;
+            var openedChatWindows = new Array();
+            for (var otherUserId in _this.chatWindows) {
+                openedChatWindows.push({
+                    userId: otherUserId,
+                    toggleState: _this.chatWindows[otherUserId].getToggleState()
+                });
             }
-            return null;
-        };
+            _this.createCookie("chat_state", JSON.stringify(openedChatWindows), 365);
+        },
 
-        _this.eraseCookie = function (name) {
-            _this.createCookie(name, "", -1);
-        };
-
-        _this.createNewChatWindow = function (otherUser, initialToggleState, initialFocusState) {
+        createNewChatWindow: function (otherUserId, initialToggleState, initialFocusState) {
 
             if (!initialToggleState)
                 initialToggleState = "maximized";
@@ -494,8 +656,15 @@
             if (!initialFocusState)
                 initialFocusState = "focused";
 
+            var _this = this;
+
+            var otherUser = _this.usersById[otherUserId];
+            if (!otherUser)
+                throw "Cannot find the other user in the list";
+
             // if this particular chat-window does not exist yet, create it
             var newChatWindow = $.chatWindow({
+                chat: _this,
                 myUser: _this.opts.user,
                 otherUser: otherUser,
                 newMessageUrl: _this.opts.newMessageUrl,
@@ -518,185 +687,34 @@
             // this cannot be in t
             _this.chatWindows[otherUser.Id.toString()] = newChatWindow;
             _this.saveWindows();
-        };
+        },
 
-
-        _this.processUserListAjaxResult = function (data) {
-            /// <summary>Handles the list of users coming from the server</summary>
-            /// <param name="data" type="Array">List of users</param>
+        eraseCookie: function (name) {
             var _this = this;
-            _this.chatContainer.getContent().html('');
-            if (data.length <= 1) {
-                $("<div/>").addClass("user-list-empty").text(_this.opts.emptyRoomText).appendTo(_this.chatContainer.getContent());
+            _this.createCookie(name, "", -1);
+        },
+
+        readCookie: function (name) {
+            var nameEq = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEq) == 0) return c.substring(nameEq.length, c.length);
             }
-            else {
-                var indexedData = new Object();
-                for (var i = 0; i < data.length; i++) {
-                    if (data[i].Id != _this.opts.user.Id) {
-                        indexedData[data[i].Id] = data[i];
-                        var $userListItem = $("<div/>")
-                            .addClass("user-list-item")
-                            .attr("data-val-id", data[i].Id)
-                            .appendTo(_this.chatContainer.getContent());
+            return null;
+        },
 
-                        $("<img/>")
-                            .addClass("profile-picture")
-                            .attr("src", data[i].ProfilePictureUrl)
-                            .appendTo($userListItem);
-
-                        $("<div/>")
-                            .addClass("profile-status")
-                            .addClass(data[i].Status == 0 ? "offline" : "online")
-                            .appendTo($userListItem);
-
-                        $("<div/>")
-                            .addClass("content")
-                            .text(data[i].Name)
-                            .appendTo($userListItem);
-
-                        // makes a click in the user to either create a new chat window or open an existing
-                        // I must clusure the 'i'
-                        (function (otherUserId) {
-                            // handles clicking in a user. Starts up a new chat session
-                            $userListItem.click(function () {
-                                if (_this.chatWindows[data[otherUserId].Id]) {
-                                    _this.chatWindows[data[otherUserId].Id].focus();
-                                } else
-                                    _this.createNewChatWindow(data[otherUserId]);
-                            });
-                        })(i);
-                    }
-                }
+        createCookie: function (name, value, days) {
+            var expires;
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toGMTString();
+            } else {
+                expires = "";
             }
-
-            // update the online status of the remaining windows
-            for (var i in _this.chatWindows) {
-                if (indexedData && indexedData[i])
-                    _this.chatWindows[i].setOnlineStatus(indexedData[i].Status == 1);
-                else
-                    _this.chatWindows[i].setOnlineStatus(false);
-            }
-
-            _this.chatContainer.setVisible(true);
-        };
-
-        _this.saveWindows = function () {
-            var _this = this;
-            var openedChatWindows = new Array();
-            for (var otherUserId in _this.chatWindows) {
-                openedChatWindows.push({
-                    userId: otherUserId,
-                    toggleState: _this.chatWindows[otherUserId].getToggleState()
-                });
-            }
-            _this.createCookie("chat_state", JSON.stringify(openedChatWindows), 365);
-        };
-
-        _this.loadWindows = function () {
-            var _this = this;
-            var cookie = _this.readCookie("chat_state");
-            if (cookie) {
-                var openedChatWindows = JSON.parse(cookie);
-                for (var i = 0; i < openedChatWindows.length; i++) {
-                    var otherUserId = openedChatWindows[i].userId;
-                    _this.opts.adapter.server.getUserInfo(otherUserId, function (user) {
-                        if (user) {
-                            if (!_this.chatWindows[otherUserId])
-                                _this.createNewChatWindow(user, null, "blured");
-                        } else {
-                            // when an error occur, the state of this cookie invalid
-                            // it must be destroyed
-                            _this.eraseCookie("chat_state");
-                        }
-                    });
-                }
-            }
-        };
-
-        _this.playSound = function (filename) {
-            /// <summary>Plays a notification sound</summary>
-            /// <param name="filename" type="String">The file path without extension</param>
-            var $soundContainer = $("#soundContainer");
-            if (!$soundContainer.length)
-                $soundContainer = $("<div>").attr("id", "soundContainer").appendTo($("body"));
-            $soundContainer.html('<audio autoplay="autoplay"><source src="' + filename + '.mp3" type="audio/mpeg" /><source src="' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="' + filename + '.mp3" /></audio>');
-        };
-
-
-    }
-
-    // Separate functionality from object creation
-    Chat.prototype = {
-
-        init: function () {
-            var _this = this;
-
-            var mainChatWindowChatState = _this.readCookie("main_window_chat_state");
-            if (!mainChatWindowChatState)
-                mainChatWindowChatState = "maximized";
-
-            // will create user list chat container
-            _this.chatContainer = $.chatContainer({
-                title: _this.opts.titleText,
-                showTextBox: false,
-                canClose: false,
-                initialToggleState: mainChatWindowChatState,
-                onCreated: function (container) {
-                    if (!container.$windowInnerContent.html()) {
-                        var $loadingBox = $("<div/>").addClass("loading-box").appendTo(container.$windowInnerContent);
-                        $loadingBox.activity({ segments: 8, width: 3, space: 0, length: 3, color: '#666666', speed: 1.5 });
-                    }
-                },
-                onToggleStateChanged: function (toggleState) {
-                    _this.createCookie("main_window_chat_state", toggleState);
-                }
-            });
-
-            _this.client = new Object();
-
-            // the client functions are functions that must be called by the chat-adapter to interact
-            // with the chat
-            _this.client.sendMessage = function (message) {
-                /// <summary>Called by the adapter when the OTHER user sends a message to the current user</summary>
-                /// <param name="message" type="Object">Message object</param>
-                if (message.UserFrom.Id != _this.opts.user.Id) {
-                    // in this case this message did not came from myself
-                    if (!_this.chatWindows[message.UserFrom.Id])
-                        _this.createNewChatWindow(message.UserFrom);
-                    else
-                        _this.chatWindows[message.UserFrom.Id].addMessage(message);
-
-                    _this.playSound("/chatjs/sounds/chat");
-
-                    // play sound here
-                } else {
-                    if (_this.chatWindows[message.UserTo.Id]) {
-                        _this.chatWindows[message.UserTo.Id].addMessage(message);
-                    }
-                }
-            };
-
-            _this.client.sendTypingSignal = function (otherUser) {
-                /// <summary>Called by the adapter when the OTHER user is sending a typing signal to the current user</summary>
-                /// <param name="otherUser" type="Object">User object (the other sending the typing signal)</param>
-                if (_this.chatWindows[otherUser.Id]) {
-                    _this.chatWindows[otherUser.Id].showTypingSignal(otherUser);
-                }
-            };
-
-            _this.client.usersListChanged = function (usersList) {
-                /// <summary>Called by the adapter when the users list changes</summary>
-                /// <param name="usersList" type="Object">The new user list</param>
-                _this.processUserListAjaxResult(usersList);
-            };
-
-            _this.onReady = function (usersList) {
-                /// <summary>Called by the adapter when all the adapter initialization is done already</summary>
-                /// <param name="usersList" type=""></param>
-                _this.loadWindows();
-            };
-
-            _this.opts.adapter.init(_this);
+            document.cookie = name + "=" + value + expires + "; path=/";
         }
     };
 
