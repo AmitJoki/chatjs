@@ -2,7 +2,9 @@
 using System.Web.Mvc;
 using ChatJs.Net;
 using ChatJsMvcSample.Code;
-using ChatJsMvcSample.Models.Database;
+using ChatJsMvcSample.Code.LongPolling;
+using ChatJsMvcSample.Code.LongPolling.Chat;
+using ChatJsMvcSample.Code.SignalR;
 using ChatJsMvcSample.Models.ViewModels;
 
 namespace ChatJsMvcSample.Controllers
@@ -11,14 +13,14 @@ namespace ChatJsMvcSample.Controllers
     {
         public ActionResult Index()
         {
-            var existingUser = ChatCookieHelperStub.GetDbUserFromCookie(this.Request);
+            var existingUser = ChatHelper.GetChatUserFromCookie(this.Request);
             ChatViewModel chatViewModel = null;
             if (existingUser != null)
             {
-                if (!ChatHub.IsUserRegisteredInDbUsersStub(existingUser))
+                if (!ChatHub.IsUserRegistered(existingUser))
                 {
                     // cookie is invalid
-                    ChatCookieHelperStub.RemoveCookie(this.Response);
+                    ChatHelper.RemoveCookie(this.Response);
                     return this.RedirectToAction("Index");
                 }
 
@@ -28,8 +30,7 @@ namespace ChatJsMvcSample.Controllers
                         IsUserAuthenticated = true,
                         UserId = existingUser.Id,
                         UserName = existingUser.FullName,
-                        UserProfilePictureUrl =
-                            GravatarHelper.GetGravatarUrl(GravatarHelper.GetGravatarHash(existingUser.Email), GravatarHelper.Size.s32)
+                        UserProfilePictureUrl = existingUser.ProfilePictureUrl
                     };
             }
 
@@ -42,25 +43,36 @@ namespace ChatJsMvcSample.Controllers
         public ActionResult JoinChat(string userName, string email)
         {
             // try to find an existing user with the same e-mail
-            var dbUSer = ChatHub.FindUserByEmail(email);
-            if (dbUSer == null)
+            var user = ChatHub.FindUserByEmail(email);
+
+            if (user == null)
             {
-                // This is all STUB. In a normal situation, 
-                dbUSer = new DbUserStub()
+                user = new ChatUser()
                     {
                         FullName = userName,
                         Email = email,
+                        ProfilePictureUrl = GravatarHelper.GetGravatarUrl(GravatarHelper.GetGravatarHash(email), GravatarHelper.Size.s32),
                         Id = new Random().Next(100000),
-                        TenancyId = ChatHub.ROOM_ID_STUB
+                        Status = ChatUser.StatusType.Online,
+                        RoomId = ChatController.ROOM_ID_STUB
                     };
-                // Normally it wouldn't be necessary to add the user to the ChatHub, because ChatHub
-                // would get users from the database, but there's no database here
-                ChatHub.RegisterNewUser(dbUSer);
+
+                // for signalr
+                {
+                    ChatHub.RegisterNewUser(user);
+                }
+
+                // for long-polling
+                {
+                    ChatServer.SetupRoomIfNonexisting(ChatController.ROOM_ID_STUB);
+                    ChatServer.Rooms[ChatController.ROOM_ID_STUB].RegisterNewUser(user);
+                }
             }
 
             // Normally it wouldn't be necessary to create this cookie because the
             // FormsAuthentication cookie does this
-            ChatCookieHelperStub.CreateNewUserCookie(this.Response, dbUSer);
+            ChatHelper.CreateNewUserCookie(this.Response, user);
+
             return this.RedirectToAction("Index");
         }
 
@@ -69,7 +81,7 @@ namespace ChatJsMvcSample.Controllers
         /// </summary>
         public ActionResult LeaveChat(string userName, string email)
         {
-            ChatCookieHelperStub.RemoveCookie(this.Response);
+            ChatHelper.RemoveCookie(this.Response);
             return this.RedirectToAction("Index");
         }
     }

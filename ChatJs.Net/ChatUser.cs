@@ -1,4 +1,6 @@
-﻿namespace ChatJs.Net
+﻿using System;
+
+namespace ChatJs.Net
 {
     /// <summary>
     /// Information about a chat user
@@ -27,7 +29,7 @@
         /// <summary>
         /// User display name
         /// </summary>
-        public string Name { get; set; }
+        public string FullName { get; set; }
 
         /// <summary>
         /// Profile Url
@@ -43,5 +45,20 @@
         /// User's status
         /// </summary>
         public StatusType Status { get; set; }
+
+        /// <summary>
+        /// Last time this user has been active
+        /// </summary>
+        public DateTime LastActiveOn { get; set; }
+
+        /// <summary>
+        /// User e-mail
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
+        /// User room id
+        /// </summary>
+        public string RoomId { get; set; }
     }
 }

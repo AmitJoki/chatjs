@@ -127,10 +127,10 @@ XMPPAdapter.prototype = {
 
         _this.server.sendMessage = function (otherUserId, messageText, clientGuid, done) {
             /// <summary>Sends a message to server</summary>
-            /// <param name="otherUserId" type="Number">The id of the user to which the message is being sent</param>
-            /// <param name="messageText" type="String">Message text</param>
-            /// <param name="clientGuid" type="String">Message client guid. Each message must have a client id in order for it to be recognized when it comes back from the server</param>
-            /// <param name="done" type="Function">Function to be called when this method completes</param>
+            /// <param FullName="otherUserId" type="Number">The id of the user to which the message is being sent</param>
+            /// <param FullName="messageText" type="String">Message text</param>
+            /// <param FullName="clientGuid" type="String">Message client guid. Each message must have a client id in order for it to be recognized when it comes back from the server</param>
+            /// <param FullName="done" type="Function">Function to be called when this method completes</param>
             
             // Save message in local history
             if(messages[otherUserId] == null)
@@ -161,8 +161,8 @@ XMPPAdapter.prototype = {
 
         _this.server.sendTypingSignal = function (otherUserId, done) {
             /// <summary>Sends a typing signal to the server</summary>
-            /// <param name="otherUserId" type="Number">The id of the user to which the typing signal is being sent</param>
-            /// <param name="done" type="Function">Function to be called when this method completes</param>
+            /// <param FullName="otherUserId" type="Number">The id of the user to which the typing signal is being sent</param>
+            /// <param FullName="done" type="Function">Function to be called when this method completes</param>
             
             //TODO
         };
@@ -177,8 +177,8 @@ XMPPAdapter.prototype = {
 
         _this.server.getUserInfo = function (otherUserId, done) {
             /// <summary>Gets information about the user</summary>
-            /// <param name="otherUserId" type="Number">The id of the user from which you want the information</param>
-            /// <param name="done" type="Function">FUnction to be called when this method completes</param>
+            /// <param FullName="otherUserId" type="Number">The id of the user from which you want the information</param>
+            /// <param FullName="done" type="Function">FUnction to be called when this method completes</param>
             //TODO request vcard
             done();
             /*done({
