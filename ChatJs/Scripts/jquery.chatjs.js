@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ChatJS 1.0 - MIT License
  * www.chatjs.net
  * 
@@ -83,7 +83,8 @@
             // text-box-wrapper
             if (_this.opts.showTextBox) {
                 var $windowTextBoxWrapper = $("<div/>").addClass("chat-window-text-box-wrapper").appendTo(_this.$windowContent);
-                _this.$textBox = $("<input/>").attr("type", "text").addClass("chat-window-text-box").appendTo($windowTextBoxWrapper);
+                _this.$textBox = $("<textarea rows='1'/>").addClass("chat-window-text-box").appendTo($windowTextBoxWrapper);
+                _this.$textBox.autosize();
             }
 
             // wire everything up
@@ -357,7 +358,7 @@
                     e.preventDefault();
                     if ($(this).val()) {
                         _this.sendMessage($(this).val());
-                        $(this).val('');
+                        $(this).val('').trigger("autosize.resize");
                     }
                 }
             });
@@ -446,7 +447,9 @@
             adapter: null,
             titleText: 'Chat',
             emptyRoomText: "There's no other users",
-            typingText: " is typing..."
+            typingText: " is typing...",
+            useActivityIndicatorPlugin: true,
+            playSound: true
         };
 
         //Extending options:
