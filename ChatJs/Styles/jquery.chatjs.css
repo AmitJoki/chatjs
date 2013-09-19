@@ -17,11 +17,8 @@
  **/
 
 .chat-window {
-    background-color: White;
-    border-color: #A7A7A7;
-    border-image: none;
-    border-style: solid;
-    border-width: 1px 1px 0;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.3);
     bottom: 0;
     box-shadow: 0 0 10px #D5D5D5;
     font-family: Arial,Helvetica;
@@ -37,12 +34,13 @@
     }
 
 .chat-window-title {
-    background: none repeat scroll 0 0 #EEEEEE;
+    background: none repeat scroll 0 0 #6D84B4;
     border-bottom: 1px solid #D7D7D7;
+    color: #FFFFFF;
     cursor: pointer;
     font-weight: bold;
-    padding: 6px;
     overflow: hidden;
+    padding: 6px;
 }
 
     .chat-window-title .text {
@@ -54,6 +52,11 @@
         float: right;
         height: 16px;
         width: 16px;
+        opacity: 0.7;
+    }
+
+    .chat-window-title .close:hover {
+        opacity: 0.5;
     }
 
     .chat-window-title.unread {
@@ -82,17 +85,20 @@
 
     .chat-window-inner-content .loading-box {
         padding: 30px;
-
     }
-
 
 textarea.chat-window-text-box {
     width: 100%;
     overflow: hidden;
     resize: none;
+    margin: 0;
+    border-radius: 0;
+    font-size: 12px;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    padding: 5px;
+    line-height: 1.2em;
 }
 
 .user-list-item {
