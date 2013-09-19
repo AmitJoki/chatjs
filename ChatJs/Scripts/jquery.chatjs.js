@@ -603,6 +603,7 @@
                 });
             });
         },
+<<<<<<< HEAD
 
         playSound: function (filename) {
             /// <summary>Plays a notification sound</summary>
@@ -613,6 +614,18 @@
             $soundContainer.html('<audio autoplay="autoplay"><source src="' + filename + '.mp3" type="audio/mpeg" /><source src="' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="' + filename + '.mp3" /></audio>');
         },
 
+=======
+
+        playSound: function (filename) {
+            /// <summary>Plays a notification sound</summary>
+            /// <param FullName="fileFullName" type="String">The file path without extension</param>
+            var $soundContainer = $("#soundContainer");
+            if (!$soundContainer.length)
+                $soundContainer = $("<div>").attr("id", "soundContainer").appendTo($("body"));
+            $soundContainer.html('<audio autoplay="autoplay"><source src="' + filename + '.mp3" type="audio/mpeg" /><source src="' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="' + filename + '.mp3" /></audio>');
+        },
+
+>>>>>>> chatjs-main
         loadWindows: function () {
             var _this = this;
             var cookie = _this.readCookie("chat_state");
@@ -660,6 +673,24 @@
             if (!otherUser)
                 throw "Cannot find the other user in the list";
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+            // will create user list chat container
+            _this.chatContainer = $.chatContainer({
+                title: _this.opts.titleText,
+                showTextBox: false,
+                canClose: false,
+                initialToggleState: mainChatWindowChatState,
+                onCreated: function (container) {
+                    if (!container.$windowInnerContent.html()) {
+                        var $loadingBox = $("<div/>").addClass("loading-box").appendTo(container.$windowInnerContent);
+                        if (_this.opts.useActivityIndicatorPlugin) {
+                            $loadingBox.activity({ segments: 8, width: 3, space: 0, length: 3, color: '#666666', speed: 1.5 });
+                        }
+                    }
+=======
+=======
+>>>>>>> chatjs-main
             // if this particular chat-window does not exist yet, create it
             var newChatWindow = $.chatWindow({
                 chat: _this,
@@ -676,16 +707,62 @@
                     delete _this.chatWindows[otherUser.Id];
                     $.organizeChatContainers();
                     _this.saveWindows();
+<<<<<<< HEAD
+>>>>>>> long polling adapter and REFACTORING
+=======
+>>>>>>> chatjs-main
                 },
                 onToggleStateChanged: function (toggleState) {
                     _this.saveWindows();
                 }
             });
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+            _this.client = new Object();
+
+            // the client functions are functions that must be called by the chat-adapter to interact
+            // with the chat
+            _this.client.sendMessage = function (message) {
+                /// <summary>Called by the adapter when the OTHER user sends a message to the current user</summary>
+                /// <param name="message" type="Object">Message object</param>
+                if (message.UserFrom.Id != _this.opts.user.Id) {
+                    // in this case this message did not came from myself
+                    if (!_this.chatWindows[message.UserFrom.Id])
+                        _this.createNewChatWindow(message.UserFrom);
+                    else
+                        _this.chatWindows[message.UserFrom.Id].addMessage(message);
+
+                    if (_this.opts.playSound) {
+                        _this.playSound("/chatjs/sounds/chat");
+                    }
+
+                    // play sound here
+                } else {
+                    if (_this.chatWindows[message.UserTo.Id]) {
+                        _this.chatWindows[message.UserTo.Id].addMessage(message);
+                    }
+                }
+            };
+
+            _this.client.sendTypingSignal = function (otherUser) {
+                /// <summary>Called by the adapter when the OTHER user is sending a typing signal to the current user</summary>
+                /// <param name="otherUser" type="Object">User object (the other sending the typing signal)</param>
+                if (_this.chatWindows[otherUser.Id]) {
+                    _this.chatWindows[otherUser.Id].showTypingSignal(otherUser);
+                }
+            };
+=======
+=======
+>>>>>>> chatjs-main
             // this cannot be in t
             _this.chatWindows[otherUser.Id.toString()] = newChatWindow;
             _this.saveWindows();
         },
+<<<<<<< HEAD
+>>>>>>> long polling adapter and REFACTORING
+=======
+>>>>>>> chatjs-main
 
         eraseCookie: function (name) {
             var _this = this;

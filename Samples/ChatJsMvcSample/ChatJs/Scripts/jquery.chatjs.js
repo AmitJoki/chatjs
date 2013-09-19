@@ -83,7 +83,8 @@
             // text-box-wrapper
             if (_this.opts.showTextBox) {
                 var $windowTextBoxWrapper = $("<div/>").addClass("chat-window-text-box-wrapper").appendTo(_this.$windowContent);
-                _this.$textBox = $("<input/>").attr("type", "text").addClass("chat-window-text-box").appendTo($windowTextBoxWrapper);
+                _this.$textBox = $("<textarea />").attr("rows", "1").addClass("chat-window-text-box").appendTo($windowTextBoxWrapper);
+                _this.$textBox.autosize();
             }
 
             // wire everything up
@@ -193,7 +194,7 @@
         this.addMessage = function (message, clientGuid) {
             var _this = this;
             _this.chatContainer.setToggleState("maximized");
-            
+
             if (message.UserFromId != this.opts.myUser.Id) {
                 // the message did not came from myself. Better erase the typing signal
                 _this.removeTypingSignal();
@@ -357,7 +358,7 @@
                     e.preventDefault();
                     if ($(this).val()) {
                         _this.sendMessage($(this).val());
-                        $(this).val('');
+                        $(this).val('').trigger("autosize.resize");
                     }
                 }
             });
@@ -446,7 +447,9 @@
             adapter: null,
             titleText: 'Chat',
             emptyRoomText: "There's no other users",
-            typingText: " is typing..."
+            typingText: " is typing...",
+            useActivityIndicatorPlugin: true,
+            playSound: true
         };
 
         //Extending options:
@@ -482,7 +485,8 @@
                 onCreated: function (container) {
                     if (!container.$windowInnerContent.html()) {
                         var $loadingBox = $("<div/>").addClass("loading-box").appendTo(container.$windowInnerContent);
-                        $loadingBox.activity({ segments: 8, width: 3, space: 0, length: 3, color: '#666666', speed: 1.5 });
+                        if (_this.opts.useActivityIndicatorPlugin)
+                            $loadingBox.activity({ segments: 8, width: 3, space: 0, length: 3, color: '#666666', speed: 1.5 });
                     }
                 },
                 onToggleStateChanged: function (toggleState) {
@@ -502,8 +506,8 @@
                             _this.createNewChatWindow(message.UserFromId);
                         else
                             _this.chatWindows[message.UserFromId].addMessage(message);
-
-                        _this.playSound("/chatjs/sounds/chat");
+                        if (_this.opts.playSound)
+                            _this.playSound("/chatjs/sounds/chat");
 
                         // play sound here
                     } else {

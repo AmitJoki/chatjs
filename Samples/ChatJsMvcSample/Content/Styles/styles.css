@@ -106,8 +106,16 @@ table {
             position: absolute;
         }
 
+        .hero .hero-text .version {
+            color: #808080;
+            display: block;
+            font-size: 12px;
+            margin-left: 108px;
+            margin-top: -8px;
+        }
+
         .hero .hero-text h1 {
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         .hero .hero-text p.info {

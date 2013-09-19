@@ -29,7 +29,7 @@ namespace ChatJsMvcSample.Controllers
                     {
                         IsUserAuthenticated = true,
                         UserId = existingUser.Id,
-                        UserName = existingUser.FullName,
+                        UserName = existingUser.Name,
                         UserProfilePictureUrl = existingUser.ProfilePictureUrl
                     };
             }
@@ -49,7 +49,7 @@ namespace ChatJsMvcSample.Controllers
             {
                 user = new ChatUser()
                     {
-                        FullName = userName,
+                        Name = userName,
                         Email = email,
                         ProfilePictureUrl = GravatarHelper.GetGravatarUrl(GravatarHelper.GetGravatarHash(email), GravatarHelper.Size.s32),
                         Id = new Random().Next(100000),

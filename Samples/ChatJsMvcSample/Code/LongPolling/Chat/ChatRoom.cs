@@ -153,7 +153,7 @@ namespace ChatJsMvcSample.Code.LongPolling.Chat
                 if (inactiveUsers.Any())
                     this.lastTimeRoomChanged = DateTime.UtcNow.Ticks;
 
-                return this.UsersById.Values.OrderBy(u => u.FullName).ToList();
+                return this.UsersById.Values.OrderBy(u => u.Name).ToList();
             }
         }
 

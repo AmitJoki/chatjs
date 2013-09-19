@@ -92,7 +92,7 @@ namespace ChatJsMvcSample.Code.SignalR
             return new ChatUser()
             {
                 Id = dbUser.Id,
-                FullName = dbUser.FullName,
+                Name = dbUser.Name,
                 Status = userStatus,
                 ProfilePictureUrl = GravatarHelper.GetGravatarUrl(GravatarHelper.GetGravatarHash(dbUser.Email), GravatarHelper.Size.s32)
             };
@@ -222,7 +222,7 @@ namespace ChatJsMvcSample.Code.SignalR
         {
             var myUserId = this.GetMyUserId();
             var myRoomId = this.GetMyRoomId();
-            var roomUsers = chatUsers.Where(u => u.RoomId == myRoomId && u.Id != myUserId).OrderBy(u => u.FullName).ToList();
+            var roomUsers = chatUsers.Where(u => u.RoomId == myRoomId && u.Id != myUserId).OrderBy(u => u.Name).ToList();
             return roomUsers;
         }
 

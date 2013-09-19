@@ -165,6 +165,7 @@
     <Content Include="ChatJs\Images\Emoticons\smile-5.png" />
     <Content Include="ChatJs\Images\Emoticons\smile-6.png" />
     <Content Include="ChatJs\license.txt" />
+    <Content Include="ChatJs\Scripts\jquery.autosize.min.js" />
     <Content Include="ChatJs\Scripts\jquery.chatjs.longpollingadapter.js" />
     <Content Include="ChatJs\Scripts\jquery.activity-indicator-1.0.0.min.js" />
     <Content Include="ChatJs\Scripts\jquery.chatjs.xmppadapter.js" />

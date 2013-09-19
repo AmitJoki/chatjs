@@ -61,7 +61,7 @@ namespace ChatJsMvcSample.Code.LongPolling.Chat
         private static LongPollingEvent GetLongPollingEventForRoomUsersChanged(IEnumerable<ChatUser> users, int myUserId)
         {
             if (users == null) throw new ArgumentNullException("users");
-            var roomUsersExcludingCurrentUser = users.Where(u => u.Id != myUserId).OrderBy(u => u.FullName).ToList();
+            var roomUsersExcludingCurrentUser = users.Where(u => u.Id != myUserId).OrderBy(u => u.Name).ToList();
             return new LongPollingEvent()
                 {
                     Data = roomUsersExcludingCurrentUser,

@@ -29,7 +29,7 @@ namespace ChatJs.Net
         /// <summary>
         /// User display name
         /// </summary>
-        public string FullName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Profile Url
