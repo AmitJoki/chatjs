@@ -18,4 +18,5 @@ Adapter implementations
 -----------------------
 
 [Getting started with SignalR](https://github.com/andrerpena/chatjs/wiki/Getting-up-and-running-with-SignalR)
+
 [Getting started with long polling](https://github.com/andrerpena/chatjs/wiki/Getting-up-and-running-with-long-polling)
