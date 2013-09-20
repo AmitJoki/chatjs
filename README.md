@@ -13,3 +13,9 @@ ChatJS depends on [jQuery](http://jquery.com/) and two jQuery plugins, [Autosize
 <script src="/ChatJs/Scripts/jquery.autosize.min.js" type="text/javascript"></script>
 <script src="/ChatJs/Scripts/jquery.activity-indicator-1.0.0.min.js" type="text/javascript"></script>
 ```
+
+Adapter implementations
+-----------------------
+
+[Getting started with SignalR](https://github.com/andrerpena/chatjs/wiki/Getting-up-and-running-with-SignalR)
+[Getting started with long polling](https://github.com/andrerpena/chatjs/wiki/Getting-up-and-running-with-long-polling)
