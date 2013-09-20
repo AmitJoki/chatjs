@@ -8,7 +8,6 @@ Dependencies
 -------------------
 
 ChatJS depends on [jQuery](http://jquery.com/) and two jQuery plugins, [Autosize](http://www.jacklmoore.com/autosize/) and [Activity-indicator](http://neteye.github.io/activity-indicator.html):
-
 ```js
 <script src="/Scripts/jquery-1.8.1.min.js" type="text/javascript"></script>
 <script src="/ChatJs/Scripts/jquery.autosize.min.js" type="text/javascript"></script>
