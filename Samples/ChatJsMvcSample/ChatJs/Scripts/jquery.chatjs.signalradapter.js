@@ -17,6 +17,9 @@
  * 
  **/
 
+// More about adapters: https://github.com/andrerpena/chatjs/wiki/The-anatomy-of-a-ChatJS-adapter
+// About the SignalR adapter: https://github.com/andrerpena/chatjs/wiki/Getting-up-and-running-with-SignalR
+
 function SignalRAdapter() {
     /// <summary>
     /// SignalR adapter for ChatJS. In order to use this adapter.. Pass an instance of this 

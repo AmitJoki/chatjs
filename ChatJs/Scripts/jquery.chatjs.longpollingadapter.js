@@ -17,6 +17,8 @@
  * 
  **/
 
+// More about adapters: https://github.com/andrerpena/chatjs/wiki/The-anatomy-of-a-ChatJS-adapter
+// About the long polling adapter: https://github.com/andrerpena/chatjs/wiki/Getting-up-and-running-with-long-polling
 
 (function ($) {
 
@@ -155,120 +157,116 @@ LongPollingAdapter.prototype = {
 
         // These are the methods that ARE CALLED BY THE CLIENT
         // Client functions should call these functions
-        _this.server = new Object();
-
-        _this.server.sendMessage = function (otherUserId, messageText, clientGuid, done) {
-            /// <summary>Sends a message to server</summary>
-            /// <param FullName="otherUserId" type="Number">The id of the user to which the message is being sent</param>
-            /// <param FullName="messageText" type="String">Message text</param>
-            /// <param FullName="clientGuid" type="String">Message client guid. Each message must have a client id in order for it to be recognized when it comes back from the server</param>
-            /// <param FullName="done" type="Function">Function to be called when this method completes</param>
-            $.ajax({
-                type: "POST",
-                url: _this.opts.sendMessageUrl,
-                data: {
-                    otherUserId: otherUserId,
-                    message: messageText,
-                    clientGuid: clientGuid
-                },
-                cache: false,
-                success: function (result) {
-                    // fine
-                    if (done)
-                        done(result);
-                },
-                error: function (result) {
-                    // too bad
-                }
-            });
-        };
-
-        _this.server.sendTypingSignal = function (otherUserId, done) {
-            /// <summary>Sends a typing signal to the server</summary>
-            /// <param FullName="otherUserId" type="Number">The id of the user to which the typing signal is being sent</param>
-            /// <param FullName="done" type="Function">Function to be called when this method completes</param>
+        _this.server = {
+            sendMessage: function (otherUserId, messageText, clientGuid, done) {
+                /// <summary>Sends a message to server</summary>
+                /// <param FullName="otherUserId" type="Number">The id of the user to which the message is being sent</param>
+                /// <param FullName="messageText" type="String">Message text</param>
+                /// <param FullName="clientGuid" type="String">Message client guid. Each message must have a client id in order for it to be recognized when it comes back from the server</param>
+                /// <param FullName="done" type="Function">Function to be called when this method completes</param>
+                $.ajax({
+                    type: "POST",
+                    url: _this.opts.sendMessageUrl,
+                    data: {
+                        otherUserId: otherUserId,
+                        message: messageText,
+                        clientGuid: clientGuid
+                    },
+                    cache: false,
+                    success: function (result) {
+                        // fine
+                        if (done)
+                            done(result);
+                    },
+                    error: function (result) {
+                        // too bad
+                    }
+                });
+            },
+            sendTypingSignal: function (otherUserId, done) {
+                /// <summary>Sends a typing signal to the server</summary>
+                /// <param FullName="otherUserId" type="Number">The id of the user to which the typing signal is being sent</param>
+                /// <param FullName="done" type="Function">Function to be called when this method completes</param>
             
-            $.ajax({
-                type: "POST",
-                async: false,
-                url: _this.opts.sendTypingSignalUrl,
-                data: {
-                    otherUserId: otherUserId
-                },
-                cache: false,
-                success: function (data) {
-                    // fine
-                    if (done)
-                        done(data.Messages);
-                },
-                error: function () {
-                    // too bad
-                }
-            });
-        };
-
-        _this.server.getMessageHistory = function (otherUserId, done) {
-            /// <summary>Gets message history from the server</summary>
-            /// <param FullName="otherUserId" type="Number">The id of the user from which you want the history</param>
-            /// <param FullName="done" type="Number">Function to be called when this method completes</param>
-            $.ajax({
-                type: "GET",
-                async: false,
-                url: _this.opts.getMessageHistoryUrl,
-                data: {
-                    otherUserId: otherUserId
-                },
-                cache: false,
-                success: function (data) {
-                    // fine
-                    if (done)
-                        done(data.Messages);
-                },
-                error: function () {
-                    // too bad
-                }
-            });
-        };
-
-        _this.server.getUserInfo = function (userId, done) {
-            /// <summary>Gets information about the user</summary>
-            /// <param FullName="userId" type="Number">The id of the user from which you want the information</param>
-            /// <param FullName="done" type="Function">FUnction to be called when this method completes</param>
-            $.ajax({
-                type: "GET",
-                async: false,
-                url: _this.opts.userInfoUrl,
-                data: {
-                    userId: userId
-                },
-                cache: false,
-                success: function (result) {
-                    // fine
-                    if (done)
-                        done(result.User);
-                },
-                error: function () {
-                    // too bad
-                }
-            });
-        };
-
-        _this.server.getUsersList = function (done) {
-            /// <summary>Gets the list of the users in the current room</summary>
-            $.ajax({
-                type: "GET",
-                async: false,
-                url: _this.opts.usersListUrl,
-                cache: false,
-                success: function (result) {
-                    // fine
-                    if (done)
-                        done(result.Users);
-                },
-                error: function () {
-                    // too bad
-                }
-            });
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: _this.opts.sendTypingSignalUrl,
+                    data: {
+                        otherUserId: otherUserId
+                    },
+                    cache: false,
+                    success: function (data) {
+                        // fine
+                        if (done)
+                            done(data.Messages);
+                    },
+                    error: function () {
+                        // too bad
+                    }
+                });
+            },
+            getMessageHistory: function (otherUserId, done) {
+                /// <summary>Gets message history from the server</summary>
+                /// <param FullName="otherUserId" type="Number">The id of the user from which you want the history</param>
+                /// <param FullName="done" type="Number">Function to be called when this method completes</param>
+                $.ajax({
+                    type: "GET",
+                    async: false,
+                    url: _this.opts.getMessageHistoryUrl,
+                    data: {
+                        otherUserId: otherUserId
+                    },
+                    cache: false,
+                    success: function (data) {
+                        // fine
+                        if (done)
+                            done(data.Messages);
+                    },
+                    error: function () {
+                        // too bad
+                    }
+                });
+            },
+            getUserInfo: function (userId, done) {
+                /// <summary>Gets information about the user</summary>
+                /// <param FullName="userId" type="Number">The id of the user from which you want the information</param>
+                /// <param FullName="done" type="Function">FUnction to be called when this method completes</param>
+                $.ajax({
+                    type: "GET",
+                    async: false,
+                    url: _this.opts.userInfoUrl,
+                    data: {
+                        userId: userId
+                    },
+                    cache: false,
+                    success: function (result) {
+                        // fine
+                        if (done)
+                            done(result.User);
+                    },
+                    error: function () {
+                        // too bad
+                    }
+                });
+            },
+            getUsersList: function (done) {
+                /// <summary>Gets the list of the users in the current room</summary>
+                $.ajax({
+                    type: "GET",
+                    async: false,
+                    url: _this.opts.usersListUrl,
+                    cache: false,
+                    success: function (result) {
+                        // fine
+                        if (done)
+                            done(result.Users);
+                    },
+                    error: function () {
+                        // too bad
+                    }
+                });
+            }
         };
 
         // starts to poll the server for events

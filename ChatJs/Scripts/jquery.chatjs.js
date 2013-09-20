@@ -373,7 +373,7 @@
                 }
             });
 
-            _this.chatContainer.setTitle(_this.opts.otherUser.FullName);
+            _this.chatContainer.setTitle(_this.opts.otherUser.Name);
 
             _this.opts.adapter.server.getMessageHistory(_this.opts.otherUser.Id, function (messageHistory) {
                 for (var i = 0; i < messageHistory.length; i++)
@@ -405,7 +405,7 @@
             var _this = this;
             if (_this.$typingSignal)
                 _this.$typingSignal.remove();
-            _this.$typingSignal = $("<p/>").addClass("typing-signal").text(user.FullName + _this.opts.typingText);
+            _this.$typingSignal = $("<p/>").addClass("typing-signal").text(user.Name + _this.opts.typingText);
             _this.chatContainer.$windowInnerContent.after(_this.$typingSignal);
             if (_this.typingSignalTimeout)
                 clearTimeout(_this.typingSignalTimeout);
@@ -569,7 +569,7 @@
 
                                 $("<div/>")
                                     .addClass("content")
-                                    .text(usersList[i].FullName)
+                                    .text(usersList[i].Name)
                                     .appendTo($userListItem);
 
                                 // makes a click in the user to either create a new chat window or open an existing
