@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ChatJS 1.0 - MIT License
  * www.chatjs.net
  * 
