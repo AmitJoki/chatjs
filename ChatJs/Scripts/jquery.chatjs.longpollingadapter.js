@@ -250,8 +250,7 @@ LongPollingAdapter.prototype = {
                     success: function (result) {
                         // fine
                         if (done)
-                            //  done(result.Users); TODO change server side and restore original line
-                            done(result);
+                            done(result.Users);
                     },
                     error: function () {
                         // too bad
