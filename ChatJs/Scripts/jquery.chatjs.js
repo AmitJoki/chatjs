@@ -1,7 +1,7 @@
 /**
  * ChatJS 1.0 - MIT License
  * www.chatjs.net
- * 
+ *
  * Copyright (c) 2013, André Pena
  * All rights reserved.
  *
@@ -601,6 +601,7 @@
                 _this.opts.adapter.server.getUsersList(function (usersList) {
                     _this.client.usersListChanged(usersList);
                     _this.loadWindows();
+                    _this.opts.adapter.startLongPolling();
                 });
             });
         },
