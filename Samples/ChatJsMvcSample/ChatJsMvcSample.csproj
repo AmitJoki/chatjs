@@ -164,13 +164,13 @@
     <Compile Include="Code\LongPolling\Chat\ChatRoomUserSubscription.cs" />
     <Compile Include="Code\LongPolling\Chat\ChatRoomMessagesSubscription.cs" />
     <Compile Include="Code\Filters\CanonicalUrlFilter.cs" />
+    <Content Include="ChatJs\Images\ajax-loader.gif" />
     <Content Include="ChatJs\Images\Emoticons\smile-1.png" />
     <Content Include="ChatJs\Images\Emoticons\smile-2.png" />
     <Content Include="ChatJs\Images\Emoticons\smile-3.png" />
     <Content Include="ChatJs\Images\Emoticons\smile-4.png" />
     <Content Include="ChatJs\Images\Emoticons\smile-5.png" />
     <Content Include="ChatJs\Images\Emoticons\smile-6.png" />
-    <Content Include="ChatJs\license.txt" />
     <Content Include="ChatJs\Scripts\jquery.autosize.min.js" />
     <Content Include="ChatJs\Scripts\jquery.chatjs.longpollingadapter.js" />
     <Content Include="ChatJs\Scripts\jquery.activity-indicator-1.0.0.min.js" />
