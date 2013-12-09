@@ -25,5 +25,5 @@ About the adapter
 Roadmap
 -------
 
-You can see what features are going to be implemented in the future [here](https://github.com/andrerpena/chatjs/issues/milestones).
+You can see what features are going to be implemented in the future [here](https://github.com/andrerpena/chatjs/issues/milestones). If you have a feature request, please [submit a new issue](https://github.com/andrerpena/chatjs/issues/new), but please check whether it's [already planned](https://github.com/andrerpena/chatjs/issues?state=open).
 
