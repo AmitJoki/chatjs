@@ -55,9 +55,9 @@
         opacity: 0.7;
     }
 
-    .chat-window-title .close:hover {
-        opacity: 0.5;
-    }
+        .chat-window-title .close:hover {
+            opacity: 0.5;
+        }
 
     .chat-window-title.unread {
         background: none repeat scroll 0 0 white;
@@ -85,6 +85,9 @@
 
     .chat-window-inner-content .loading-box {
         padding: 30px;
+        background-image: url("../Images/ajax-loader.gif");
+        background-repeat: no-repeat;
+        background-position: center center;
     }
 
 textarea.chat-window-text-box {

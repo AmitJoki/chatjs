@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ChatJS 1.0 - MIT License
  * www.chatjs.net
  * 
@@ -259,12 +259,10 @@ LongPollingAdapter.prototype = {
             }
         };
 
-        // function passed by ChatJS to the adapter to be called when the adapter initialization is completed
-        done();
-    },
-
-    startLongPolling: function () {
         // starts to poll the server for events
         $.startLongPolling('/longpolling/getevents');
+
+        // function passed by ChatJS to the adapter to be called when the adapter initialization is completed
+        done();
     }
-};
+}
