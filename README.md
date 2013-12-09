@@ -21,3 +21,9 @@ About the adapter
 * [Understanding the internals of a ChatJS adapter](https://github.com/andrerpena/chatjs/wiki/The-anatomy-of-a-ChatJS-adapter)
 * [Getting started with SignalR](https://github.com/andrerpena/chatjs/wiki/Getting-up-and-running-with-SignalR)
 * [Getting started with long polling](https://github.com/andrerpena/chatjs/wiki/Getting-up-and-running-with-long-polling)
+
+Roadmap
+-------
+
+You can see what features are going to be implemented [here](https://github.com/andrerpena/chatjs/issues/milestones)
+
