@@ -1,6 +1,10 @@
 ChatJS
 ======
 
+THIS PROJECT HAS BEEN DISCONTINUED. 
+ChatJS is now a commercial project.
+Check out http://www.chatjs.net
+
 [ChatJS](http://www.chatjs.net/) is a full-featured, lightweight, Facebook style jQuery plugin for instant messaging.
 ChatJS is divided into two parts: `jquery.chatjs.js`, which is the actual plug-in, and an adapter, which implements the communication between the client and the server. ChatJS comes with an adapter for ASP.NET SignalR, and another one using long-polling, which is intended to be server independent, that is, it will work as long as you implement the proper server-side endpoints. ChatJS sample project works with both adapters.
 
@@ -21,3 +25,11 @@ About the adapter
 * [Understanding the internals of a ChatJS adapter](https://github.com/andrerpena/chatjs/wiki/The-anatomy-of-a-ChatJS-adapter)
 * [Getting started with SignalR](https://github.com/andrerpena/chatjs/wiki/Getting-up-and-running-with-SignalR)
 * [Getting started with long polling](https://github.com/andrerpena/chatjs/wiki/Getting-up-and-running-with-long-polling)
+
+Roadmap
+-------
+
+You can see what features are going to be implemented in the future [here](https://github.com/andrerpena/chatjs/issues/milestones). If you have a feature request, please [submit a new issue](https://github.com/andrerpena/chatjs/issues/new), but please check whether it's [already planned](https://github.com/andrerpena/chatjs/issues?state=open).
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/andrerpena/chatjs/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+

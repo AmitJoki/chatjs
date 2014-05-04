@@ -448,7 +448,6 @@
             titleText: 'Chat',
             emptyRoomText: "There's no other users",
             typingText: " is typing...",
-            useActivityIndicatorPlugin: true,
             playSound: true
         };
 
@@ -484,9 +483,7 @@
                 initialToggleState: mainChatWindowChatState,
                 onCreated: function (container) {
                     if (!container.$windowInnerContent.html()) {
-                        var $loadingBox = $("<div/>").addClass("loading-box").appendTo(container.$windowInnerContent);
-                        if (_this.opts.useActivityIndicatorPlugin)
-                            $loadingBox.activity({ segments: 8, width: 3, space: 0, length: 3, color: '#666666', speed: 1.5 });
+                        $("<div/>").addClass("loading-box").appendTo(container.$windowInnerContent);
                     }
                 },
                 onToggleStateChanged: function (toggleState) {
